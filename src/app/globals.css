@@ -1,0 +1,130 @@
+/* Global styles */
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Roboto', 'Helvetica', 'Arial', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: #121212;
+  color: white;
+}
+
+.widget-container {
+  border-radius: 12px;
+  overflow: hidden;
+  padding: 24px;
+  background-color: #222;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+}
+
+.widget-header {
+  margin-bottom: 24px;
+}
+
+.widget-content {
+  padding: 16px 0;
+}
+
+.form-container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.send-button {
+  margin-top: 24px;
+  height: 48px;
+  font-weight: 500 !important;
+  font-size: 16px !important;
+}
+
+/* Custom stepper styles */
+.MuiStepLabel-label {
+  margin-top: 8px !important;
+  font-size: 14px !important;
+}
+
+/* Custom input styles */
+.MuiInputBase-input {
+  height: 1.4em !important;
+}
+
+/* MUI Form overrides for dark theme */
+.MuiFormControl-root .MuiFormLabel-root {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.MuiFormControl-root .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline {
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.MuiFormControl-root:hover .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline {
+  border-color: rgba(255, 255, 255, 0.5);
+}
+
+.MuiFormControl-root .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline {
+  border-color: #13629F;
+}
+
+.MuiFormControl-root .MuiInputBase-input {
+  color: white;
+}
+
+.MuiFormHelperText-root.Mui-error {
+  color: #f44336;
+}
+
+.MuiStepIcon-text {
+  fill: white !important;
+  font-size: 16px !important;
+  font-weight: bold;
+}
+
+
+/* Confirmation page styles */
+.confirmation-container {
+  padding: 16px;
+}
+
+.details-container {
+  margin-bottom: 24px;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 600px) {
+  .widget-container {
+    padding: 16px;
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  
+  .widget-header h6 {
+    color: white;
+    font-weight: bold;
+  }
+  
+  .MuiStepLabel-label {
+    font-size: 12px !important;
+  }
+}
+
+
+.form-container {
+  padding: 1rem;
+}
+
+.confirmation-container {
+  padding: 2rem;
+  text-align: left;
+}
+
+.details-container {
+  background-color: #f8f9fa;
+  padding: 1.5rem;
+  border-radius: 8px;
+  margin: 1rem 0;
+}
+
+.MuiTextField-root {
+  margin-bottom: 1rem !important;
+}
