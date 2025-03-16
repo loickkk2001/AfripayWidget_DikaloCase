@@ -1,23 +1,15 @@
 'use client';
 
-<<<<<<< Updated upstream
 import { useState, useEffect } from 'react';
-import CurrencyWidget from "@/components/currencyWidget";
-import Container from '@mui/material/Container';
-import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
-import { Button } from '@mui/material';
-import { useRouter } from 'next/navigation';
-
-console.log("DEBUG: App Component Loaded ✅");
-=======
 import dynamic from 'next/dynamic';
-import { Box } from '@mui/material';
+import { Container, Box, Typography, Button } from '@mui/material';
+import { useRouter } from 'next/navigation';
 
 const CurrencyWidget = dynamic(() => import('@/components/currencyWidget'), {
   ssr: false
 });
->>>>>>> Stashed changes
+
+console.log("DEBUG: App Component Loaded ✅");
 
 export default function Home() {
   const [userId, setUserId] = useState<string | null>(null);
@@ -41,7 +33,6 @@ export default function Home() {
   };
 
   return (
-<<<<<<< Updated upstream
     <Box
       sx={{
         bgcolor: '#121212',
@@ -76,7 +67,7 @@ export default function Home() {
           {isLoading ? (
             <Box sx={{ textAlign: 'center', color: 'white' }}>Loading...</Box>
           ) : userId ? (
-            <CurrencyWidget companyName="Dikalo" userId={userId} />
+            <CurrencyWidget userId={userId} companyName="Dikalo" />
           ) : (
             <Box sx={{ 
               textAlign: 'center', 
@@ -106,17 +97,6 @@ export default function Home() {
           )}
         </Box>
       </Container>
-=======
-    <Box sx={{ 
-      bgcolor: '#121212', 
-      minHeight: '100vh', 
-      py: 4,
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center'
-    }}>
-      <CurrencyWidget userId="default" />
->>>>>>> Stashed changes
     </Box>
   );
 }

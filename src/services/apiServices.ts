@@ -1,6 +1,12 @@
 import { login, getBalance, processTransaction } from './apiClient';
 import type { UserInfo, ReceiverInfo, TransactionDetails, PaymentInfo } from '@/types';
 
+interface TransactionResponse {
+  success: boolean;
+  data: any;
+  message: string;
+}
+
 export const authService = {
   login: async (email: string, password: string) => {
     return login(email, password);
@@ -17,7 +23,13 @@ export const authService = {
 
 export const financeService = {
   getBalance: async () => {
-    return getBalance();
+    try {
+      const response = await getBalance();
+      return response;
+    } catch (error: any) {
+      console.error('Balance fetch error:', error);
+      throw new Error(error.message || 'Failed to fetch balance');
+    }
   },
 
   processTransaction: async (
@@ -25,15 +37,16 @@ export const financeService = {
     sender: UserInfo,
     payment: PaymentInfo,
     receiver: ReceiverInfo
-  ) => {
+  ): Promise<TransactionResponse> => {
     try {
-      // Format the data according to the API's expectations
       const response = await processTransaction({
         sendAmount: transaction.sendAmount,
         sendCurrency: transaction.sendCurrency,
         receiver: {
           phone: receiver.phone,
-          name: receiver.name
+          name: receiver.name,
+          email: receiver.email,
+          destination_country: 'Cameroon'
         }
       });
 
@@ -44,7 +57,11 @@ export const financeService = {
       };
     } catch (error: any) {
       console.error('Transaction processing error:', error);
-      throw new Error(error.message || 'Failed to process transaction');
+      return {
+        success: false,
+        data: null,
+        message: error.message || 'Failed to process transaction'
+      };
     }
   }
 };
