@@ -8,6 +8,11 @@ interface TransactionResponse {
   message: string;
 }
 
+interface Balance {
+  currency: string;
+  amount: number;
+}
+
 export function useTransaction() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
@@ -51,48 +56,17 @@ export function useTransaction() {
 export const useBalance = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
-<<<<<<< Updated upstream
-  const [balance, setBalance] = useState<BalanceResponse | null>(null);
-
-  const getBalance = async (userId: string): Promise<BalanceResponse> => {
-=======
-  const [balance, setBalance] = useState<any[] | null>(null);
+  const [balance, setBalance] = useState<Balance[] | null>(null);
 
   const getBalance = async () => {
->>>>>>> Stashed changes
     setLoading(true);
     setError(null);
 
     try {
-<<<<<<< Updated upstream
-      // Check for authentication token
-      const token = localStorage.getItem('authToken'); // or sessionStorage, or wherever you store it
-
-      if (!token) {
-        throw new Error('Authentication token not found');
-      }
-
-      const response = await fetch(`/api/balance/${userId}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to fetch balance');
-      }
-
-      const data: BalanceResponse = await response.json();
-      setBalance(data);
-      return data;
-    } catch (err) {
-      const error = err instanceof Error ? err : new Error('Une erreur est survenue');
-=======
       const response = await financeService.getBalance();
       setBalance(response);
     } catch (err) {
       const error = err instanceof Error ? err : new Error('Failed to fetch balance');
->>>>>>> Stashed changes
       setError(error);
       throw error;
     } finally {
@@ -100,9 +74,6 @@ export const useBalance = () => {
     }
   };
 
-<<<<<<< Updated upstream
-  return { loading, error, balance, getBalance };
-=======
   return { 
     loading, 
     error, 
@@ -110,5 +81,4 @@ export const useBalance = () => {
     getBalance,
     setBalance
   };
->>>>>>> Stashed changes
 };
