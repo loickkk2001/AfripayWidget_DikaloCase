@@ -1,7 +1,11 @@
 'use client';
 
 import React, { useState, useEffect } from "react";
+<<<<<<< Updated upstream
 import { Stepper, Step, StepLabel, Box, Typography } from "@mui/material";
+=======
+import { Stepper, Step, StepLabel, Box, Typography, useMediaQuery, useTheme } from "@mui/material";
+>>>>>>> Stashed changes
 import ExchangeForm from "@/components/steps/ExchangeForm";
 import SenderKYC from "@/components/steps/SenderKYC";
 import PaymentMethod from "@/components/steps/PaymentMethod";
@@ -17,12 +21,22 @@ import type {
 } from "@/types";
 import Image from 'next/image';
 
+<<<<<<< Updated upstream
 const CurrencyWidget = ({ companyName = "Dikalo", userId }: { companyName?: string; userId: string }) => {
+=======
+interface CurrencyWidgetProps {
+  userId: string;
+}
+
+const CurrencyWidget = ({ userId }: CurrencyWidgetProps) => {
+  const [mounted, setMounted] = useState(false);
+>>>>>>> Stashed changes
   const [activeStep, setActiveStep] = useState(0);
   const [transactionDetails, setTransactionDetails] = useState<TransactionDetails | null>(null);
   const [senderInfo, setSenderInfo] = useState<UserInfo | null>(null);
   const [paymentInfo, setPaymentInfo] = useState<PaymentInfo | null>(null);
   const [receiverInfo, setReceiverInfo] = useState<ReceiverInfoType | null>(null);
+<<<<<<< Updated upstream
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [balance, setBalance] = useState<number | null>(null); // Add balance state
 
@@ -34,8 +48,20 @@ const CurrencyWidget = ({ companyName = "Dikalo", userId }: { companyName?: stri
     // Log for debugging
     console.log("Authentication status:", !!token, "UserID:", userId);
   }, [userId]);
+=======
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+>>>>>>> Stashed changes
 
-  const steps = ["Exchange", "Your Information", "Payment Method", "Receiver Information", "Confirmation"];
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) {
+    return null;
+  }
+
+  const steps = ["Exchange", "Your Info", "Payment", "Receiver", "Confirm"];
 
   const handleExchangeSubmit = (details: TransactionDetails) => {
     setTransactionDetails(details);
@@ -66,6 +92,7 @@ const CurrencyWidget = ({ companyName = "Dikalo", userId }: { companyName?: stri
   };
 
   return (
+<<<<<<< Updated upstream
     <Box className="widget-container" sx={{ borderRadius: "10px", overflow: "hidden", bgcolor: "black", color: "white" }}>
       <Box className="widget-header">
         <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%", mb: 2 }}>
@@ -170,6 +197,126 @@ const CurrencyWidget = ({ companyName = "Dikalo", userId }: { companyName?: stri
         >
           {activeStep === 5 ? 'Back to Exchange' : 'Need to deposit funds?'}
         </Typography>
+=======
+    <Box 
+      sx={{ 
+        width: '100%',
+        maxWidth: '450px',
+        margin: '0 auto',
+        padding: { xs: '16px', sm: '20px' },
+        display: 'flex',
+        flexDirection: 'column',
+        gap: 2,
+        minHeight: { xs: '100vh', sm: 'auto' },
+        backgroundColor: 'black',
+        borderRadius: { xs: 0, sm: '10px' },
+        boxShadow: { xs: 'none', sm: '0 4px 6px rgba(0, 0, 0, 0.1)' },
+      }}
+    >
+      {/* Header */}
+      <Box sx={{ 
+        display: "flex", 
+        justifyContent: "space-between", 
+        alignItems: "center",
+        width: "100%",
+        mb: 2
+      }}>
+        <Box sx={{ width: '80px', height: '20px', position: 'relative' }}>
+          <Image 
+            src="/images/dikalo-logo.jpg" 
+            alt="Dikalo Logo" 
+            fill
+            style={{ objectFit: 'contain' }}
+            priority
+          />
+        </Box>
+        <Box sx={{ 
+          display: "flex", 
+          flexDirection: "column", 
+          alignItems: "flex-end"
+        }}>
+          <Box sx={{ width: '120px', height: '30px', position: 'relative' }}>
+            <Image 
+              src="/images/afripaylogowhite.png" 
+              alt="Afpay Logo" 
+              fill
+              style={{ objectFit: 'contain' }}
+              priority
+            />
+          </Box>
+          <Typography 
+            variant="caption" 
+            sx={{ 
+              color: "rgba(255, 255, 255, 0.7)",
+              fontSize: '0.75rem'
+            }}
+          >
+            Powered by AfripayFinance ©
+          </Typography>
+        </Box>
+      </Box>
+
+      {/* Stepper */}
+      <Stepper
+        activeStep={activeStep}
+        alternativeLabel
+        sx={{
+          mb: 3,
+          '& .MuiStepLabel-label': { 
+            color: 'white', 
+            fontSize: isMobile ? '0.7rem' : '0.8rem',
+            fontWeight: "bold",
+            whiteSpace: 'nowrap',
+          },
+          '& .MuiStepIcon-root': { 
+            color: '#13629F',
+            fontSize: isMobile ? '1.2rem' : '1.5rem'
+          },
+          '& .MuiStepIcon-text': { 
+            fill: 'white', 
+            fontSize: '0.7rem'
+          },
+          '& .MuiStepIcon-root.Mui-active': { 
+            color: '#F3DB41' 
+          },
+          '& .MuiStepIcon-root.Mui-completed': { 
+            color: '#F3DB41' 
+          },
+        }}
+      >
+        {steps.map((label) => (
+          <Step key={label}>
+            <StepLabel>{label}</StepLabel>
+          </Step>
+        ))}
+      </Stepper>
+
+      {/* Content */}
+      <Box sx={{ 
+        flex: 1,
+        display: 'flex',
+        flexDirection: 'column',
+        width: '100%',
+        color: 'white',
+      }}>
+        {activeStep === 0 && <ExchangeForm onSubmit={handleExchangeSubmit} />}
+        {activeStep === 1 && (
+          <SenderKYC
+            onSubmit={handleSenderSubmit}
+            requireFullKYC={(transactionDetails?.sendAmount ?? 0) > 500}
+          />
+        )}
+        {activeStep === 2 && <PaymentMethod onSubmit={handlePaymentSubmit} />}
+        {activeStep === 3 && <ReceiverInfo onSubmit={handleReceiverSubmit} />}
+        {activeStep === 4 && transactionDetails && senderInfo && paymentInfo && receiverInfo && (
+          <ConfirmationPage
+            transaction={transactionDetails}
+            sender={senderInfo}
+            payment={paymentInfo}
+            receiver={receiverInfo}
+          />
+        )}
+>>>>>>> Stashed changes
       </Box>
     </Box>
   );

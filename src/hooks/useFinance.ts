@@ -1,61 +1,38 @@
 import { useState } from 'react';
-import { FinanceService } from '../services/apiServices';
+import { financeService } from '../services/apiServices';
+import type { TransactionDetails, UserInfo, PaymentInfo, ReceiverInfo } from '@/types';
 
-// Définition des interfaces pour vos types
-interface TransactionData {
-  amount: number;
-  currency: string;
-  phoneNumber: string;
-  paymentMethod: string;
-  reference?: string;
-  userId?: string; // ✅ Added userId to TransactionData
+interface TransactionResponse {
+  success: boolean;
+  data: any;
+  message: string;
 }
 
-interface CashInResponse {
-  transactionId: string;
-  status: string;
-  amount: number; // ✅ Added amount to CashInResponse
-}
-
-interface BalanceResponse {
-  balance: number; // ✅ Ensure balance is included
-  currency: string;
-  lastUpdated: string;
-}
-
-// Hook pour le cash-in
-export function useCashIn() {
+export function useTransaction() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
-  const [transaction, setTransaction] = useState<CashInResponse | null>(null);
+  const [transaction, setTransaction] = useState<TransactionResponse | null>(null);
 
-  const processCashIn = async (data: TransactionData): Promise<CashInResponse> => {
+  const processTransaction = async (
+    transactionDetails: TransactionDetails,
+    sender: UserInfo,
+    payment: PaymentInfo,
+    receiver: ReceiverInfo
+  ): Promise<TransactionResponse> => {
     setLoading(true);
     setError(null);
 
     try {
-      const result = await FinanceService.processCashIn(data);
-      setTransaction(result); // ✅ Set transaction with CashInResponse
+      const result = await financeService.processTransaction(
+        transactionDetails,
+        sender,
+        payment,
+        receiver
+      );
+      setTransaction(result);
       return result;
     } catch (err) {
-      const error = err instanceof Error ? err : new Error('Une erreur est survenue');
-      setError(error);
-      throw error;
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const checkStatus = async (transactionId: string): Promise<CashInResponse> => {
-    setLoading(true);
-    setError(null);
-
-    try {
-      const result = await FinanceService.checkTransactionStatus(transactionId);
-      setTransaction((prev) => (prev ? { ...prev, status: result.status } : result));
-      return result;
-    } catch (err) {
-      const error = err instanceof Error ? err : new Error('Une erreur est survenue');
+      const error = err instanceof Error ? err : new Error('Transaction failed');
       setError(error);
       throw error;
     } finally {
@@ -67,22 +44,27 @@ export function useCashIn() {
     loading,
     error,
     transaction,
-    processCashIn,
-    checkStatus,
+    processTransaction,
   };
 }
 
-// Hook pour obtenir le solde
 export const useBalance = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
+<<<<<<< Updated upstream
   const [balance, setBalance] = useState<BalanceResponse | null>(null);
 
   const getBalance = async (userId: string): Promise<BalanceResponse> => {
+=======
+  const [balance, setBalance] = useState<any[] | null>(null);
+
+  const getBalance = async () => {
+>>>>>>> Stashed changes
     setLoading(true);
     setError(null);
 
     try {
+<<<<<<< Updated upstream
       // Check for authentication token
       const token = localStorage.getItem('authToken'); // or sessionStorage, or wherever you store it
 
@@ -105,6 +87,12 @@ export const useBalance = () => {
       return data;
     } catch (err) {
       const error = err instanceof Error ? err : new Error('Une erreur est survenue');
+=======
+      const response = await financeService.getBalance();
+      setBalance(response);
+    } catch (err) {
+      const error = err instanceof Error ? err : new Error('Failed to fetch balance');
+>>>>>>> Stashed changes
       setError(error);
       throw error;
     } finally {
@@ -112,5 +100,15 @@ export const useBalance = () => {
     }
   };
 
+<<<<<<< Updated upstream
   return { loading, error, balance, getBalance };
+=======
+  return { 
+    loading, 
+    error, 
+    balance, 
+    getBalance,
+    setBalance
+  };
+>>>>>>> Stashed changes
 };

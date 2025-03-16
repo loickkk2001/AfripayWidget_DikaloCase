@@ -1,5 +1,6 @@
 'use client';
 
+<<<<<<< Updated upstream
 import { useState, useEffect } from 'react';
 import CurrencyWidget from "@/components/currencyWidget";
 import Container from '@mui/material/Container';
@@ -9,6 +10,14 @@ import { Button } from '@mui/material';
 import { useRouter } from 'next/navigation';
 
 console.log("DEBUG: App Component Loaded ✅");
+=======
+import dynamic from 'next/dynamic';
+import { Box } from '@mui/material';
+
+const CurrencyWidget = dynamic(() => import('@/components/currencyWidget'), {
+  ssr: false
+});
+>>>>>>> Stashed changes
 
 export default function Home() {
   const [userId, setUserId] = useState<string | null>(null);
@@ -32,6 +41,7 @@ export default function Home() {
   };
 
   return (
+<<<<<<< Updated upstream
     <Box
       sx={{
         bgcolor: '#121212',
@@ -96,6 +106,17 @@ export default function Home() {
           )}
         </Box>
       </Container>
+=======
+    <Box sx={{ 
+      bgcolor: '#121212', 
+      minHeight: '100vh', 
+      py: 4,
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center'
+    }}>
+      <CurrencyWidget userId="default" />
+>>>>>>> Stashed changes
     </Box>
   );
 }

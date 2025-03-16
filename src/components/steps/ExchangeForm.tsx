@@ -102,31 +102,52 @@ const ExchangeForm = ({ onSubmit }: ExchangeFormProps) => {
 
         return (
           <Form>
-            <Box className="form-container">
-              <Paper elevation={1} sx={{ p: 2, mb: 2, bgcolor: COLORS.paperBackground, color: COLORS.text }}>
-                <Typography variant="subtitle2" gutterBottom sx={{ color: COLORS.text }}>
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+              <Paper 
+                elevation={1} 
+                sx={{ 
+                  p: 2,
+                  bgcolor: 'rgba(255, 255, 255, 0.1)',
+                  borderRadius: 1
+                }}
+              >
+                <Typography variant="subtitle2" gutterBottom sx={{ color: 'white' }}>
                   You Send
                 </Typography>
-                <Box display="flex" gap={2}>
+                <Box display="flex" gap={1}>
                   <TextField
                     fullWidth
                     name="sendAmount"
                     type="number"
+                    placeholder="0.00"
                     value={values.sendAmount}
                     onChange={handleChange}
                     onBlur={handleBlur}
                     error={touched.sendAmount && Boolean(errors.sendAmount)}
                     helperText={touched.sendAmount && errors.sendAmount}
-                    InputLabelProps={{ style: { color: COLORS.text } }}
-                    InputProps={{ style: { color: COLORS.text } }}
+                    InputProps={{
+                      sx: {
+                        color: 'white',
+                        '& input': {
+                          color: 'white',
+                          '&::placeholder': {
+                            color: 'rgba(255, 255, 255, 0.5)',
+                            opacity: 1
+                          }
+                        }
+                      }
+                    }}
                     sx={{
                       '& .MuiOutlinedInput-root': {
-                        '& fieldset': { borderColor: COLORS.divider },
-                        '&:hover fieldset': { borderColor: COLORS.text },
+                        '& fieldset': { borderColor: 'rgba(255, 255, 255, 0.2)' },
+                        '&:hover fieldset': { borderColor: 'rgba(255, 255, 255, 0.5)' },
+                        '&.Mui-focused fieldset': { borderColor: '#F3DB41' }
                       },
                       '& .MuiFormHelperText-root': {
-                        color: COLORS.error,
-                      },
+                        color: 'error.main',
+                        margin: 0,
+                        marginTop: 1
+                      }
                     }}
                   />
                   <Select
@@ -134,26 +155,40 @@ const ExchangeForm = ({ onSubmit }: ExchangeFormProps) => {
                     value={values.sendCurrency}
                     onChange={handleChange}
                     sx={{
-                      minWidth: 100,
-                      color: COLORS.text,
+                      minWidth: 90,
+                      color: 'white',
                       '& .MuiOutlinedInput-notchedOutline': {
-                        borderColor: COLORS.divider,
+                        borderColor: 'rgba(255, 255, 255, 0.2)'
                       },
                       '&:hover .MuiOutlinedInput-notchedOutline': {
-                        borderColor: COLORS.text,
+                        borderColor: 'rgba(255, 255, 255, 0.5)'
+                      },
+                      '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                        borderColor: '#F3DB41'
                       },
                       '& .MuiSvgIcon-root': {
-                        color: COLORS.text,
-                      },
+                        color: 'white'
+                      }
                     }}
                     MenuProps={{
                       PaperProps: {
-                        sx: { bgcolor: '#333' },
-                      },
+                        sx: { bgcolor: '#1A1A1A' }
+                      }
                     }}
                   >
                     {currencies.map((currency) => (
-                      <MenuItem key={currency} value={currency} sx={{ color: COLORS.text }}>
+                      <MenuItem 
+                        key={currency} 
+                        value={currency}
+                        sx={{ 
+                          color: 'white',
+                          '&:hover': { bgcolor: 'rgba(255, 255, 255, 0.1)' },
+                          '&.Mui-selected': { 
+                            bgcolor: 'rgba(243, 219, 65, 0.2)',
+                            '&:hover': { bgcolor: 'rgba(243, 219, 65, 0.3)' }
+                          }
+                        }}
+                      >
                         {currency}
                       </MenuItem>
                     ))}
@@ -161,36 +196,48 @@ const ExchangeForm = ({ onSubmit }: ExchangeFormProps) => {
                 </Box>
               </Paper>
 
-              <Paper elevation={1} sx={{ p: 2, mb: 2, bgcolor: COLORS.paperBackground, color: COLORS.text }}>
-                <Typography variant="subtitle2" gutterBottom sx={{ color: COLORS.text }}>
+              <Paper 
+                elevation={1} 
+                sx={{ 
+                  p: 2,
+                  bgcolor: 'rgba(255, 255, 255, 0.1)',
+                  borderRadius: 1
+                }}
+              >
+                <Typography variant="subtitle2" gutterBottom sx={{ color: 'white' }}>
                   Transaction Fee
                 </Typography>
-                <Typography variant="body1" sx={{ color: COLORS.text }}>
+                <Typography variant="h6" sx={{ color: '#F3DB41' }}>
                   {fees.toFixed(2)} {values.sendCurrency}
                 </Typography>
               </Paper>
 
-              <Paper elevation={1} sx={{ p: 2, mb: 2, bgcolor: COLORS.paperBackground, color: COLORS.text }}>
-                <Typography variant="subtitle2" gutterBottom sx={{ color: COLORS.text }}>
+              <Paper 
+                elevation={1} 
+                sx={{ 
+                  p: 2,
+                  bgcolor: 'rgba(255, 255, 255, 0.1)',
+                  borderRadius: 1
+                }}
+              >
+                <Typography variant="subtitle2" gutterBottom sx={{ color: 'white' }}>
                   Receiver Gets
                 </Typography>
-                <Box display="flex" gap={2}>
+                <Box display="flex" gap={1}>
                   <TextField
                     fullWidth
                     disabled
-                    value={receiveAmount ? receiveAmount.toFixed(2) : '0.00'}
+                    value={receiveAmount.toFixed(2)}
                     InputProps={{
-                      style: {
-                        color: COLORS.text,
+                      sx: {
+                        color: 'white',
                         fontSize: '1.2rem',
                         fontWeight: 'bold',
-                      },
-                    }}
-                    sx={{
-                      '& .MuiOutlinedInput-root': {
-                        '& fieldset': { borderColor: COLORS.divider },
-                      },
-                      backgroundColor: 'rgba(19, 98, 159, 0.3)',
+                        bgcolor: 'rgba(19, 98, 159, 0.3)',
+                        '& .Mui-disabled': {
+                          WebkitTextFillColor: 'white !important'
+                        }
+                      }
                     }}
                   />
                   <Select
@@ -198,26 +245,40 @@ const ExchangeForm = ({ onSubmit }: ExchangeFormProps) => {
                     value={values.receiveCurrency}
                     onChange={handleChange}
                     sx={{
-                      minWidth: 100,
-                      color: COLORS.text,
+                      minWidth: 90,
+                      color: 'white',
                       '& .MuiOutlinedInput-notchedOutline': {
-                        borderColor: COLORS.divider,
+                        borderColor: 'rgba(255, 255, 255, 0.2)'
                       },
                       '&:hover .MuiOutlinedInput-notchedOutline': {
-                        borderColor: COLORS.text,
+                        borderColor: 'rgba(255, 255, 255, 0.5)'
+                      },
+                      '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                        borderColor: '#F3DB41'
                       },
                       '& .MuiSvgIcon-root': {
-                        color: COLORS.text,
-                      },
+                        color: 'white'
+                      }
                     }}
                     MenuProps={{
                       PaperProps: {
-                        sx: { bgcolor: '#333' },
-                      },
+                        sx: { bgcolor: '#1A1A1A' }
+                      }
                     }}
                   >
                     {currencies.map((currency) => (
-                      <MenuItem key={currency} value={currency} sx={{ color: COLORS.text }}>
+                      <MenuItem 
+                        key={currency} 
+                        value={currency}
+                        sx={{ 
+                          color: 'white',
+                          '&:hover': { bgcolor: 'rgba(255, 255, 255, 0.1)' },
+                          '&.Mui-selected': { 
+                            bgcolor: 'rgba(243, 219, 65, 0.2)',
+                            '&:hover': { bgcolor: 'rgba(243, 219, 65, 0.3)' }
+                          }
+                        }}
+                      >
                         {currency}
                       </MenuItem>
                     ))}
@@ -225,14 +286,16 @@ const ExchangeForm = ({ onSubmit }: ExchangeFormProps) => {
                 </Box>
               </Paper>
 
-              {loading && (
-                <Box display="flex" justifyContent="center" my={2}>
-                  <CircularProgress size={20} />
-                </Box>
-              )}
-
               {values.sendAmount && (
-                <Typography variant="body1" color="text.secondary" textAlign="center" mb={2} sx={{ color: COLORS.success, fontWeight: 'bold' }}>
+                <Typography 
+                  variant="body1" 
+                  textAlign="center"
+                  sx={{ 
+                    color: '#F3DB41',
+                    fontWeight: 'bold',
+                    my: 2
+                  }}
+                >
                   1 {values.sendCurrency} = {fixedRates[values.sendCurrency][values.receiveCurrency].toFixed(4)}{' '}
                   {values.receiveCurrency}
                 </Typography>
@@ -242,16 +305,20 @@ const ExchangeForm = ({ onSubmit }: ExchangeFormProps) => {
                 type="submit"
                 variant="contained"
                 fullWidth
-                className="send-button"
                 disabled={loading}
                 sx={{
-                  backgroundColor: `${COLORS.primary} !important`,
+                  mt: 2,
+                  py: 1.5,
+                  backgroundColor: '#13629F',
                   '&:hover': {
-                    backgroundColor: `${COLORS.hoverPrimary} !important`,
+                    backgroundColor: '#0D4A7A'
                   },
+                  '&:disabled': {
+                    backgroundColor: 'rgba(19, 98, 159, 0.5)'
+                  }
                 }}
               >
-                Continue
+                {loading ? 'Processing...' : 'Continue'}
               </Button>
             </Box>
           </Form>
