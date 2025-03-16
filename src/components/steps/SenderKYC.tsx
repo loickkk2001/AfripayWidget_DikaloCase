@@ -12,7 +12,6 @@ import {
 } from '@mui/material';
 import * as Yup from 'yup';
 import type { UserInfo } from '@/types';
-import apiClient from '@/services/apiClient'; // Import API client
 
 interface Props {
   onSubmit: (values: UserInfo) => void;
@@ -36,47 +35,63 @@ const SenderKYC: React.FC<Props> = ({ onSubmit, requireFullKYC }) => {
   });
 
   const handleFormSubmit = async (values: UserInfo) => {
-    setApiError(null); // Reset error message before submission
+    setApiError(null);
     try {
-      const response = await apiClient.post('/kyc/verify', values); // API Call
-      if (response.status === 200) {
-        console.log("DEBUG: KYC Submission Successful ✅", response.data);
-        onSubmit(values); // Proceed if successful
-      } else {
-        throw new Error(response.data?.message || "Unknown API error");
+      const response = await fetch('/api/kyc', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(values),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || 'KYC verification failed');
       }
+
+      if (!data.success) {
+        throw new Error(data.message || 'KYC verification failed');
+      }
+
+      console.log("KYC Verification successful:", data);
+      onSubmit({
+        ...values,
+        verificationId: data.data.verificationId
+      });
     } catch (error: any) {
-      console.error("DEBUG: KYC API Error ❌", error);
+      console.error("KYC API Error:", error);
       setApiError(error.message || "Failed to verify KYC");
     }
   };
 
   return (
-    <Formik
-      initialValues={{
-        name: '',
-        email: '',
-        phone: '',
-        country: '',
-        idType: '',
-        idNumber: ''
-      }}
-      validationSchema={validationSchema}
-      onSubmit={handleFormSubmit} // Use the new submit handler
-    >
-      {({ values, errors, touched, handleChange, handleBlur }) => (
-        <Form>
-          <Box sx={{ bgcolor: "rgba(255, 255, 255, 0.1)", padding: 2, borderRadius: 2 }}>
-            <Typography variant="h6" gutterBottom>
-              {requireFullKYC ? 'Enhanced Verification Required' : 'Basic Information'}
-            </Typography>
+    <Box sx={{ bgcolor: "rgba(255, 255, 255, 0.1)", padding: 2, borderRadius: 2 }}>
+      <Typography variant="h6" gutterBottom>
+        {requireFullKYC ? 'Enhanced Verification Required' : 'Basic Information'}
+      </Typography>
 
-            {apiError && (
-              <Typography color="error" sx={{ mb: 2 }}>
-                {apiError}
-              </Typography>
-            )}
+      {apiError && (
+        <Typography color="error" sx={{ mb: 2 }}>
+          {apiError}
+        </Typography>
+      )}
 
+      <Formik
+        initialValues={{
+          name: '',
+          email: '',
+          phone: '',
+          country: '',
+          idType: '',
+          idNumber: ''
+        }}
+        validationSchema={validationSchema}
+        onSubmit={handleFormSubmit}
+      >
+        {({ values, errors, touched, handleChange, handleBlur }) => (
+          <Form>
             <TextField
               fullWidth
               name="name"
@@ -170,13 +185,20 @@ const SenderKYC: React.FC<Props> = ({ onSubmit, requireFullKYC }) => {
               variant="contained"
               fullWidth
               className="send-button"
+              sx={{
+                mt: 2,
+                backgroundColor: '#13629F',
+                '&:hover': {
+                  backgroundColor: '#0D4A7A',
+                },
+              }}
             >
               Continue
             </Button>
-          </Box>
-        </Form>
-      )}
-    </Formik>
+          </Form>
+        )}
+      </Formik>
+    </Box>
   );
 };
 

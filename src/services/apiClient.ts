@@ -1,8 +1,7 @@
 import axios from 'axios';
 
-// Create Axios instance
 const apiClient = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL, // API base URL from .env
+  baseURL: '/api',
   headers: {
     'Content-Type': 'application/json',
   },
@@ -11,7 +10,7 @@ const apiClient = axios.create({
 // Add Authorization token dynamically before requests
 apiClient.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem('token'); // Get token from localStorage
+    const token = localStorage.getItem('token');
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }

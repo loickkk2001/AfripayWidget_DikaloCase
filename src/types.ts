@@ -6,6 +6,7 @@ export interface UserInfo {
   country: string;
   idType?: string;
   idNumber?: string;
+  verificationId?: string;
 }
 
 export interface ReceiverInfo {

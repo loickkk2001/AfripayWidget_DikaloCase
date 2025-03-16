@@ -76,35 +76,17 @@ export function useCashIn() {
 export const useBalance = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
-  const [balance, setBalance] = useState<BalanceResponse | null>(null);
+  const [balance, setBalanceState] = useState<number | null>(null);
 
-  const getBalance = async (userId: string): Promise<BalanceResponse> => {
+  const getBalance = async (userId: string): Promise<void> => {
     setLoading(true);
     setError(null);
 
     try {
-      // Check for authentication token
-      const token = localStorage.getItem('authToken'); // or sessionStorage, or wherever you store it
-
-      if (!token) {
-        throw new Error('Authentication token not found');
-      }
-
-      const response = await fetch(`/api/balance/${userId}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to fetch balance');
-      }
-
-      const data: BalanceResponse = await response.json();
-      setBalance(data);
-      return data;
+      const response = await FinanceService.getBalance(userId);
+      setBalanceState(response.balance);
     } catch (err) {
-      const error = err instanceof Error ? err : new Error('Une erreur est survenue');
+      const error = err instanceof Error ? err : new Error('An error occurred');
       setError(error);
       throw error;
     } finally {
@@ -112,5 +94,11 @@ export const useBalance = () => {
     }
   };
 
-  return { loading, error, balance, getBalance };
+  return { 
+    loading, 
+    error, 
+    balance, 
+    getBalance,
+    setBalance: setBalanceState 
+  };
 };
