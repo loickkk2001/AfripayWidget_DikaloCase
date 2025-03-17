@@ -1,19 +1,27 @@
-/* Global styles */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --foreground-rgb: 0, 0, 0;
+  --background-rgb: 245, 245, 245;
+}
+
 body {
+  color: rgb(var(--foreground-rgb));
+  background: rgb(var(--background-rgb));
   margin: 0;
   padding: 0;
   font-family: 'Roboto', 'Helvetica', 'Arial', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: #121212;
-  color: white;
 }
 
 .widget-container {
   border-radius: 12px;
   overflow: hidden;
   padding: 24px;
-  background-color: #222;
+  background-color: black;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
 }
 

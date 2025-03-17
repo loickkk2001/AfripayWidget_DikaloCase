@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Formik, Form } from 'formik';
 import { 
   TextField, 
@@ -8,11 +8,11 @@ import {
   InputLabel, 
   Box, 
   Button,
-  Typography
+  Typography,
+  Paper
 } from '@mui/material';
 import * as Yup from 'yup';
 import type { UserInfo } from '@/types';
-import apiClient from '@/services/apiClient'; // Import API client
 
 interface Props {
   onSubmit: (values: UserInfo) => void;
@@ -22,8 +22,6 @@ interface Props {
 const countries = ["Cameroon", "Nigeria", "France", "Other"];
 
 const SenderKYC: React.FC<Props> = ({ onSubmit, requireFullKYC }) => {
-  const [apiError, setApiError] = useState<string | null>(null);
-
   const validationSchema = Yup.object().shape({
     name: Yup.string().required('Name is required').min(2, 'Name is too short'),
     email: Yup.string().email('Invalid email').required('Email is required'),
@@ -34,22 +32,6 @@ const SenderKYC: React.FC<Props> = ({ onSubmit, requireFullKYC }) => {
       idNumber: Yup.string().required('ID number is required'),
     }),
   });
-
-  const handleFormSubmit = async (values: UserInfo) => {
-    setApiError(null); // Reset error message before submission
-    try {
-      const response = await apiClient.post('/kyc/verify', values); // API Call
-      if (response.status === 200) {
-        console.log("DEBUG: KYC Submission Successful ✅", response.data);
-        onSubmit(values); // Proceed if successful
-      } else {
-        throw new Error(response.data?.message || "Unknown API error");
-      }
-    } catch (error: any) {
-      console.error("DEBUG: KYC API Error ❌", error);
-      setApiError(error.message || "Failed to verify KYC");
-    }
-  };
 
   return (
     <Formik
@@ -62,19 +44,30 @@ const SenderKYC: React.FC<Props> = ({ onSubmit, requireFullKYC }) => {
         idNumber: ''
       }}
       validationSchema={validationSchema}
-      onSubmit={handleFormSubmit} // Use the new submit handler
+      onSubmit={onSubmit}
     >
       {({ values, errors, touched, handleChange, handleBlur }) => (
         <Form>
-          <Box sx={{ bgcolor: "rgba(255, 255, 255, 0.1)", padding: 2, borderRadius: 2 }}>
-            <Typography variant="h6" gutterBottom>
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+            <Typography variant="h6" gutterBottom sx={{ color: 'white' }}>
               {requireFullKYC ? 'Enhanced Verification Required' : 'Basic Information'}
             </Typography>
 
-            {apiError && (
-              <Typography color="error" sx={{ mb: 2 }}>
-                {apiError}
-              </Typography>
+            {requireFullKYC && (
+              <Paper 
+                elevation={1}
+                sx={{ 
+                  p: 2, 
+                  mb: 2, 
+                  bgcolor: 'rgba(243, 219, 65, 0.1)',
+                  border: '1px solid rgba(243, 219, 65, 0.2)',
+                  borderRadius: 1
+                }}
+              >
+                <Typography variant="body2" sx={{ color: '#F3DB41' }}>
+                  Additional verification required for amounts over 500 EUR
+                </Typography>
+              </Paper>
             )}
 
             <TextField
@@ -86,9 +79,20 @@ const SenderKYC: React.FC<Props> = ({ onSubmit, requireFullKYC }) => {
               onBlur={handleBlur}
               error={touched.name && Boolean(errors.name)}
               helperText={touched.name && errors.name}
-              margin="normal"
-              variant="outlined"
-              sx={{ bgcolor: "white", borderRadius: "5px" }}
+              sx={{
+                '& .MuiOutlinedInput-root': {
+                  color: 'white',
+                  '& fieldset': { borderColor: 'rgba(255, 255, 255, 0.2)' },
+                  '&:hover fieldset': { borderColor: 'rgba(255, 255, 255, 0.5)' },
+                  '&.Mui-focused fieldset': { borderColor: '#F3DB41' }
+                },
+                '& .MuiInputLabel-root': {
+                  color: 'rgba(255, 255, 255, 0.7)'
+                },
+                '& .MuiFormHelperText-root': {
+                  color: 'error.main'
+                }
+              }}
             />
 
             <TextField
@@ -101,7 +105,20 @@ const SenderKYC: React.FC<Props> = ({ onSubmit, requireFullKYC }) => {
               onBlur={handleBlur}
               error={touched.email && Boolean(errors.email)}
               helperText={touched.email && errors.email}
-              margin="normal"
+              sx={{
+                '& .MuiOutlinedInput-root': {
+                  color: 'white',
+                  '& fieldset': { borderColor: 'rgba(255, 255, 255, 0.2)' },
+                  '&:hover fieldset': { borderColor: 'rgba(255, 255, 255, 0.5)' },
+                  '&.Mui-focused fieldset': { borderColor: '#F3DB41' }
+                },
+                '& .MuiInputLabel-root': {
+                  color: 'rgba(255, 255, 255, 0.7)'
+                },
+                '& .MuiFormHelperText-root': {
+                  color: 'error.main'
+                }
+              }}
             />
 
             <TextField
@@ -113,41 +130,126 @@ const SenderKYC: React.FC<Props> = ({ onSubmit, requireFullKYC }) => {
               onBlur={handleBlur}
               error={touched.phone && Boolean(errors.phone)}
               helperText={touched.phone && errors.phone}
-              margin="normal"
+              sx={{
+                '& .MuiOutlinedInput-root': {
+                  color: 'white',
+                  '& fieldset': { borderColor: 'rgba(255, 255, 255, 0.2)' },
+                  '&:hover fieldset': { borderColor: 'rgba(255, 255, 255, 0.5)' },
+                  '&.Mui-focused fieldset': { borderColor: '#F3DB41' }
+                },
+                '& .MuiInputLabel-root': {
+                  color: 'rgba(255, 255, 255, 0.7)'
+                },
+                '& .MuiFormHelperText-root': {
+                  color: 'error.main'
+                }
+              }}
             />
 
-            <FormControl fullWidth margin="normal">
-              <InputLabel>Country</InputLabel>
+            <FormControl fullWidth>
+              <InputLabel sx={{ color: 'rgba(255, 255, 255, 0.7)' }}>Country</InputLabel>
               <Select
                 name="country"
                 value={values.country}
                 onChange={handleChange}
                 onBlur={handleBlur}
                 error={touched.country && Boolean(errors.country)}
+                sx={{
+                  color: 'white',
+                  '& .MuiOutlinedInput-notchedOutline': {
+                    borderColor: 'rgba(255, 255, 255, 0.2)'
+                  },
+                  '&:hover .MuiOutlinedInput-notchedOutline': {
+                    borderColor: 'rgba(255, 255, 255, 0.5)'
+                  },
+                  '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                    borderColor: '#F3DB41'
+                  },
+                  '& .MuiSvgIcon-root': {
+                    color: 'white'
+                  }
+                }}
               >
                 {countries.map(country => (
-                  <MenuItem key={country} value={country}>{country}</MenuItem>
+                  <MenuItem 
+                    key={country} 
+                    value={country}
+                    sx={{
+                      color: 'white',
+                      bgcolor: '#1A1A1A',
+                      '&:hover': {
+                        bgcolor: 'rgba(243, 219, 65, 0.1)'
+                      },
+                      '&.Mui-selected': {
+                        bgcolor: 'rgba(243, 219, 65, 0.2)',
+                        '&:hover': {
+                          bgcolor: 'rgba(243, 219, 65, 0.3)'
+                        }
+                      }
+                    }}
+                  >
+                    {country}
+                  </MenuItem>
                 ))}
               </Select>
             </FormControl>
 
             {requireFullKYC && (
               <>
-                <Typography variant="subtitle2" color="primary" mt={2} mb={1}>
-                  Additional verification required for amounts over 500 EUR
-                </Typography>
-
-                <FormControl fullWidth margin="normal">
-                  <InputLabel>ID Type</InputLabel>
+                <FormControl fullWidth>
+                  <InputLabel sx={{ color: 'rgba(255, 255, 255, 0.7)' }}>ID Type</InputLabel>
                   <Select
                     name="idType"
                     value={values.idType}
                     onChange={handleChange}
                     onBlur={handleBlur}
                     error={touched.idType && Boolean(errors.idType)}
+                    sx={{
+                      color: 'white',
+                      '& .MuiOutlinedInput-notchedOutline': {
+                        borderColor: 'rgba(255, 255, 255, 0.2)'
+                      },
+                      '&:hover .MuiOutlinedInput-notchedOutline': {
+                        borderColor: 'rgba(255, 255, 255, 0.5)'
+                      },
+                      '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                        borderColor: '#F3DB41'
+                      },
+                      '& .MuiSvgIcon-root': {
+                        color: 'white'
+                      }
+                    }}
                   >
-                    <MenuItem value="passport">Passport</MenuItem>
-                    <MenuItem value="idCard">National ID Card</MenuItem>
+                    <MenuItem 
+                      value="passport"
+                      sx={{
+                        color: 'white',
+                        bgcolor: '#1A1A1A',
+                        '&:hover': {
+                          bgcolor: 'rgba(243, 219, 65, 0.1)'
+                        },
+                        '&.Mui-selected': {
+                          bgcolor: 'rgba(243, 219, 65, 0.2)'
+                        }
+                      }}
+                    >
+                      Passport
+                    </MenuItem>
+                    <MenuItem 
+                      value="idCard"
+                      sx={{
+                        color: 'white',
+                        bgcolor: '#1A1A1A',
+                        '&:hover': {
+                          bgcolor: 'rgba(243, 219, 65, 0.1)'
+                        },
+                        '&.Mui-selected': {
+                          bgcolor: 'rgba(243, 219, 65, 0.2)'
+                        }
+                      }}
+                    >
+                      National ID Card
+                    </MenuItem>
                   </Select>
                 </FormControl>
 
@@ -160,7 +262,20 @@ const SenderKYC: React.FC<Props> = ({ onSubmit, requireFullKYC }) => {
                   onBlur={handleBlur}
                   error={touched.idNumber && Boolean(errors.idNumber)}
                   helperText={touched.idNumber && errors.idNumber}
-                  margin="normal"
+                  sx={{
+                    '& .MuiOutlinedInput-root': {
+                      color: 'white',
+                      '& fieldset': { borderColor: 'rgba(255, 255, 255, 0.2)' },
+                      '&:hover fieldset': { borderColor: 'rgba(255, 255, 255, 0.5)' },
+                      '&.Mui-focused fieldset': { borderColor: '#F3DB41' }
+                    },
+                    '& .MuiInputLabel-root': {
+                      color: 'rgba(255, 255, 255, 0.7)'
+                    },
+                    '& .MuiFormHelperText-root': {
+                      color: 'error.main'
+                    }
+                  }}
                 />
               </>
             )}
@@ -169,7 +284,14 @@ const SenderKYC: React.FC<Props> = ({ onSubmit, requireFullKYC }) => {
               type="submit"
               variant="contained"
               fullWidth
-              className="send-button"
+              sx={{
+                mt: 2,
+                py: 1.5,
+                backgroundColor: '#13629F',
+                '&:hover': {
+                  backgroundColor: '#0D4A7A'
+                }
+              }}
             >
               Continue
             </Button>

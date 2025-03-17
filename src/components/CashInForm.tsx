@@ -58,7 +58,7 @@ const CashInForm: React.FC<CashInFormProps> = ({ userId, setBalance, onSuccess }
       });
 
       setSubmitted(true);
-      setBalance((prevBalance) => (prevBalance !== null ? prevBalance + result.amount : result.amount));
+      setBalance((prevBalance) => (prevBalance !== null ? prevBalance + result.data.amount : result.data.amount));
       if (onSuccess) onSuccess(result);
     } catch (error) {
       console.error('Error processing cash-in:', error);
@@ -71,8 +71,8 @@ const CashInForm: React.FC<CashInFormProps> = ({ userId, setBalance, onSuccess }
       {submitted && transaction ? (
         <Box textAlign="center">
           <Alert severity="success">Transaction initiée avec succès!</Alert>
-          <Typography>ID de transaction: {transaction.transactionId}</Typography>
-          <Typography>Statut: {transaction.status || 'En attente'}</Typography>
+          <Typography>ID de transaction: {transaction.data.transactionId}</Typography>
+          <Typography>Statut: {transaction.data.status || 'En attente'}</Typography>
           <Button variant="contained" onClick={() => setSubmitted(false)}>Nouvelle transaction</Button>
         </Box>
       ) : (
