@@ -295,6 +295,22 @@ const SenderKYC: React.FC<Props> = ({ onSubmit, requireFullKYC }) => {
             >
               Continue
             </Button>
+
+            <Button 
+              type="submit"
+              variant="contained"
+              fullWidth
+              sx={{
+                mt: 2,
+                py: 1.5,
+                backgroundColor: '#13629F',
+                '&:hover': {
+                  backgroundColor: '#0D4A7A'
+                }
+              }}
+            >
+              Retourne
+            </Button>
           </Box>
         </Form>
       )}

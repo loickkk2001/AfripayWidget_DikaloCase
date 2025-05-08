@@ -233,6 +233,21 @@ const PaymentMethod = ({ onSubmit }: PaymentMethodProps) => {
             >
               Continue
             </Button>
+
+            <Button
+              type="submit"
+              variant="contained"
+              fullWidth
+              className="back-button"
+              sx={{
+                backgroundColor: '#13629F !important',
+                '&:hover': {
+                  backgroundColor: '#0D4A7A !important',
+                },
+              }}
+            >
+              Retourne
+            </Button>
           </Box>
         </Form>
       )}

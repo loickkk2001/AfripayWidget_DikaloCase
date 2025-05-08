@@ -15,7 +15,7 @@ import {
   Box
 } from '@mui/material';
 
-// Validation schema
+// The validation schema
 const CashInSchema = Yup.object().shape({
   amount: Yup.number()
     .required('Le montant est requis')

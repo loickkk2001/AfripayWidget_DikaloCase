@@ -85,6 +85,15 @@ const ReceiverInfo: React.FC<Props> = ({ onSubmit }) => {
             >
               Continue
             </Button>
+
+            <Button 
+              type="submit"
+              variant="contained"
+              fullWidth
+              className="back-button"
+            >
+              Retourne
+            </Button>
           </Box>
         </Form>
       )}
